@@ -1,0 +1,14 @@
+{% include "header.html" %}
+<div class="jumbotron">
+	<h1>Log In</h1>
+	<form action="{{ url_for('login') }}" method="POST">
+		<div class="input-group">
+			<input type="text" name="username" placeholder="Username" class="form-control" />
+		</div>
+		<div class="input-group">
+			<input type="password" name="password" placeholder="Password" class="form-control" />
+		</div>
+		<input class="btn btn-primary" type="submit" name="submit" />
+	</form>
+</div>
+{% include "footer.html" %}

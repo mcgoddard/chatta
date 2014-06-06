@@ -1,0 +1,44 @@
+<!doctype html>
+<head>
+	<title>CHATTA</title>
+
+	<script type="text/javascript" src="static/jquery/jquery-1.11.1.min.js"></script>
+
+	<link rel="stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css" />
+
+	<link rel="stylesheet" type="text/css" href="static/bootstrap/css/bootstrap-theme.min.css" />
+
+	<script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+
+	<link rel="stylesheet" type="text/css" href="static/style.css" />
+</head>
+<body>
+	<nav class="navbar navbar-default" role="navigation">
+	  	<div class="container-fluid">
+		    <!-- Brand and toggle get grouped for better mobile display -->
+		    <div class="navbar-header">
+		      	<a class="navbar-brand" href="#">CHATTA</a>
+	    	</div>
+	    	<ul class="nav navbar-nav navbar-right">
+	    		{% if name %}
+	        		<li><a href="{{ url_for('logout') }}">Log Out</a></li>
+	        	{% else %}
+		        	<li><a href="{{ url_for('login') }}">Log In</a></li>
+		        	<li><a href="{{ url_for('signup') }}">Sign up</a></li>
+	        	{% endif %}
+	        </ul>
+    	</div>
+    </nav>
+	<div class="container">
+		{% with messages = get_flashed_messages(with_categories=true) %}
+		  {% if messages %}
+		    <div id="flashes-area" class="flashes">
+		    {% for category, message in messages %}
+		      <div class="alert alert-{{ category }} alert-dismissable">
+		      	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+		      	{{ message }}
+		      </div>
+		    {% endfor %}
+		    </div>
+		  {% endif %}
+		{% endwith %}

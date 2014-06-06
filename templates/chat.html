@@ -1,0 +1,89 @@
+{% include "header.html" %}
+<div class="row-fluid">
+	<div class="col-md-6">
+		<h3>Chat:</h3>
+		<div id="messages-box">
+			{% for message in messages %}
+				<p class="chat"><strong>{{ message.user.username }}:</strong> {{ message.text }}</p>
+				<p class="timestamp"><i>{{ message.created_at }}</i></p>
+			{% endfor %}
+		</div>
+		<div class="input-group">
+   			<input type="text" id="message-field" class="form-control" placeholder="Message">
+		    <div class="input-group-btn">
+		      	<button type="submit" class="btn btn-primary" onClick="sendMessage()">Send</button>
+		    </div>
+	  	</div>  
+	</div>
+	<div class="col-md-6">
+		<h3>Active Users:</h3>
+		<div id="users-box">
+			{% for user in users %}
+				<p class="user">{{ user.username }}</p>
+			{% endfor %}
+		</div>
+	</div>
+</row>
+<script type="text/javascript">
+	var last_update = "{{ now }}";
+	var last_result;
+	$('#messages-box').scrollTop(999999);
+	function update() {
+		$.ajax({
+		  url: "{{ url_for('update') }}?last_update="+last_update,
+		  dataType: "json",
+		  success:function(result){
+		    var scrollHeight = $('#messages-box')[0].scrollHeight;
+		    var scrollTop = $('#messages-box').scrollTop();
+		    var height = $('#messages-box').height();
+		    var moveDown = false;
+		    if (scrollTop + height == scrollHeight) {
+		    	moveDown = true;
+		    }
+		  	$('#connection-flash').remove();
+		  	last_result = result;
+		    for(i = 0; i < result['new_messages'].length; i++) {
+		    	var message = result['new_messages'][i];
+		    	$('#messages-box').append("<p class='chat'><strong>"+message['username']+":</strong> "+message['text']+"</p>"+
+					"<p class='timestamp'><i>"+message['created_at']+"</i></p>");
+		    }
+		    var new_active_users = "";
+		    for (i = 0; i < result['active_users'].length; i++) {
+		    	new_active_users += "<p class='user'>"+result['active_users'][i]+"</p>";
+		    }
+		    $('#users-box').empty().append(new_active_users);
+		    if (moveDown) {
+		    	$('#messages-box').scrollTop(999999);
+		    }
+		    last_update = result['last_updated'];
+		  },
+		  error: function(xhr, textStatus, errorThrown){
+		  	if(!$('#connection-flash')) {
+			    $("#flashes-area").append("<div id='connection-flash' class='alert alert-warning alert-dismissable'>"+
+			      	"<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>"+
+			      	"Connection lost, attempting to re-establish!"+
+			      "</div>");
+			}
+		  }
+		  });
+	}
+	window.setInterval(update, 5000);
+	function sendMessage() {
+		var message = $('#message-field').val();
+		$('#message-field').val('');
+		$.ajax({
+			url: "{{ url_for('sendMessage') }}?message="+message,
+			success: function(result){
+				$('#message-flash').remove();
+			},
+			error:function(xhr, textStatus, errorThrown){
+				$("#flashes-area").append("<div id='message-flash' class='alert alert-warning alert-dismissable'>"+
+			      	"<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>"+
+			      	"Message not submitted!"+
+			      "</div>");
+				$('#message-field').val(message);
+			}
+		});
+	}
+</script>
+{% include "footer.html" %}

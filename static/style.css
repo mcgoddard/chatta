@@ -1,0 +1,28 @@
+#messages-box {
+	width: 100%;
+	height: 100%;
+	max-width: 600px;
+	max-height: 500px;
+	overflow-y: scroll;
+	min-height: 100px;
+}
+
+#users-box {
+	width: 100%;
+	height: 100%;
+	max-width: 600px;
+	max-height: 500px;
+	overflow-y: scroll;
+}
+
+.timestamp {
+	font-size: 80%;
+}
+
+.chat {
+	margin-bottom: 0px;
+}
+
+.input-group {
+	margin-bottom: 5px;
+}
