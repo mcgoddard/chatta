@@ -36,3 +36,5 @@ To install for development purposes:
 9) Access your development site at 127.0.0.1:5000
 
 ### Deployment
+1) Steps 1-7 of the development installation still apply
+2) Follow steps at http://flask.pocoo.org/docs/deploying to get your "chatta" onto the webserver of your choice
