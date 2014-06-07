@@ -27,6 +27,11 @@
 <script type="text/javascript">
 	var last_update = "{{ now }}";
 	var last_result;
+	$('#message-field').keydown( function(event) {
+		if ( event.which == 13 ) {
+			sendMessage();
+		}
+	});
 	$('#messages-box').scrollTop(999999);
 	function update() {
 		$.ajax({
@@ -46,6 +51,7 @@
 		    	var message = result['new_messages'][i];
 		    	$('#messages-box').append("<p class='chat'><strong>"+message['username']+":</strong> "+message['text']+"</p>"+
 					"<p class='timestamp'><i>"+message['created_at']+"</i></p>");
+			document.title = "New Message! - CHATTA";
 		    }
 		    var new_active_users = "";
 		    for (i = 0; i < result['active_users'].length; i++) {
@@ -85,5 +91,16 @@
 			}
 		});
 	}
+	var window_focus;
+	$(window).focus(function() {
+	    window_focus = true;
+	})
+	    .blur(function() {
+	        window_focus = false;
+	    });
+
+	$(document).one('click',function() {
+	   setInterval(function() { if (window_focus) { document.title = "CHATTA" } }, 1000);
+	});
 </script>
 {% include "footer.html" %}
